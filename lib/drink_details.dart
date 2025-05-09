@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:mcdonalds_drinks/components/quantity_widgets.dart';
+import 'package:mcdonalds_drinks/components/toggle_widgets.dart';
 import 'package:mcdonalds_drinks/model.dart';
 
 class DrinkDetails extends StatefulWidget {
@@ -22,8 +24,54 @@ class _DrinkDetailsState extends State<DrinkDetails> {
     super.initState();
   }
 
+  ///logic
+  int selectedIndex = 0;
+
+//access model easily
   final drinks = DrinkModel.drinks;
 
+  List<IconData> DrinksIcons = [
+    Icons.local_drink, // Small
+    Icons.local_drink, // Medium
+    Icons.local_drink, // Large
+    Icons.arrow_forward, // More
+  ];
+  List<double> iconSizes = [20.0, 25.0, 30.0, 20.0];
+
+  List<Text> TextsOfButtons = [
+    const Text(
+      'Small',
+      style: TextStyle(fontSize: 14),
+    ),
+    const Text(
+      'Medium',
+      style: TextStyle(fontSize: 16),
+    ),
+    const Text(
+      'Large',
+      style: TextStyle(fontSize: 18),
+    ),
+    const Text(
+      'More',
+      style: TextStyle(fontSize: 14),
+    ),
+  ];
+
+  List<SizedBox> sizedBoxes = [
+    const SizedBox(
+      height: 9,
+    ),
+    const SizedBox(
+      height: 4,
+    ),
+    const SizedBox(
+      height: 0,
+    ),
+    const SizedBox(
+      height: 9,
+    ),
+  ];
+  // Small, Medium, Large, More
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -74,7 +122,7 @@ class _DrinkDetailsState extends State<DrinkDetails> {
                     child: Column(
                       children: [
                         SizedBox(
-                          height: 100,
+                          height: 60,
                         ),
                         Stack(
                           children: [
@@ -84,20 +132,19 @@ class _DrinkDetailsState extends State<DrinkDetails> {
                               fit: BoxFit.contain,
                             ),
                             Positioned(
-                                top: 450,
                                 left: 0,
-                                bottom: 50,
+                                bottom: 90,
                                 right: 0,
                                 child: Container(
                                     width: 0,
-                                    height: 0,
+                                    height: 50,
                                     decoration: BoxDecoration(
                                         borderRadius:
                                             BorderRadius.circular(100),
                                         boxShadow: [
                                           BoxShadow(
                                             color: Colors.black26,
-                                            blurRadius: 80,
+                                            blurRadius: 30,
                                             spreadRadius: 10,
                                           )
                                         ])))
@@ -110,19 +157,71 @@ class _DrinkDetailsState extends State<DrinkDetails> {
               },
             ),
 
+            //widget 3 multi selection
             Positioned(
-              top: 0,
               left: 0,
               right: 0,
-              bottom: 100,
-              child: Row(
-                children: List.generate(
-                  4,
-                  (index) {
-                    return CircleAvatar(
-                      child: Icon(Icons.star),
-                    );
-                  },
+              bottom: 140,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: List.generate(
+                    4,
+                    (index) {
+                      return GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            selectedIndex = index;
+                          });
+                        },
+                        child: Column(
+                          children: [
+                            Container(
+                              padding: EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: Colors.black54,
+                                ),
+                                color: selectedIndex == index
+                                    ? Colors.orange
+                                    : Colors.white,
+                              ),
+                              child: Icon(DrinksIcons[index],
+                                  size: iconSizes[index],
+                                  color: selectedIndex == index
+                                      ? Colors.white
+                                      : Colors.black54),
+                            ),
+                            sizedBoxes[index],
+                            TextsOfButtons[index],
+                            const SizedBox(
+                              height: 30,
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
+            ),
+            Positioned(
+              left: 0, // بدل top: 750، هنستخدم left وright مع bottom
+              right: 0,
+              bottom: 40,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    ToggleWidget(),
+                    SizedBox(
+                      width: 60,
+                    ),
+                    Expanded(child: QuantityWidget()),
+                  ],
                 ),
               ),
             ),
